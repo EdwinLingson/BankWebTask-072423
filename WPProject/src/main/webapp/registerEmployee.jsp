@@ -53,10 +53,10 @@ else{
 <%if(newKeyId!=0) { %>
 
 				<div class="card text-bg-dark border border-secondary p-2 rounded" style="margin:15%; width:50%; margin-left:25%">
-					<div class="card-header h2 text-center pb-3 border border-primary rounded">Product Inserted!!! </div>
+					<div class="card-header h2 text-center pb-3 border border-primary rounded">Employee Registered!!! </div>
 					<div class="row mb-3 pt-2">
 						<label for="productid" class="col-sm-4  h5 ">
-							Product Id
+							Employee Id
 						</label>
 						<div class="col-sm-8 h5">
 							<%= employee.geteId() %>
@@ -64,7 +64,7 @@ else{
 					</div>
 					<div class="row mb-3">
 						<label for="productid" class="col-sm-4  h5">
-							Product Name
+							First Name
 						</label>
 						<div class="col-sm-8 h5">
 							<%= employee.getfName() %>
@@ -72,19 +72,60 @@ else{
 					</div>
 					<div class="row mb-3">
 						<label for="productid" class="col-sm-4  h5">
-							Product Price
+							Last Name
 						</label>
 						<div class="col-sm-8 h5">
 							<%= employee.getsName() %>
 						</div>
 					</div>
-					<div class="card-footer ">
-						<div class="text-center blockquote ">
-							<a href="listProducts.jsp">
-								<button type="submit" class="btn btn-primary" style="width:18em;font-weight: 800; font-size: 15px;">View All Products</button>
-							</a>
+					<div class="row mb-3">
+						<label for="productid" class="col-sm-4  h5">
+							Email
+						</label>
+						<div class="col-sm-8 h5">
+							<%= employee.getEmail() %>
 						</div>
 					</div>
+					<div class="row mb-3">
+						<label for="productid" class="col-sm-4  h5">
+							Phone Number
+						</label>
+						<div class="col-sm-8 h5">
+							<%= employee.getPhone() %>
+						</div>
+					</div>
+					<div class="row mb-3">
+						<label for="productid" class="col-sm-4  h5">
+							Address
+						</label>
+						<div class="col-sm-8 h5">
+							<%= employee.getAddress() %>
+						</div>
+					</div>
+					<div class="row mb-3">
+						<label for="productid" class="col-sm-4  h5">
+							Zip
+						</label>
+						<div class="col-sm-8 h5">
+							<%= employee.getZip() %>
+						</div>
+					</div>
+					<div class="row mb-3">
+						<label for="productid" class="col-sm-4  h5">
+							Last Name
+						</label>
+						<div class="col-sm-8 h5">
+							<%= employee.getsName() %>
+						</div>
+					</div>
+					
+<!-- 					<div class="card-footer "> -->
+<!-- 						<div class="text-center blockquote "> -->
+<!-- 							<a href="listProducts.jsp"> -->
+<!-- 								<button type="submit" class="btn btn-primary" style="width:18em;font-weight: 800; font-size: 15px;">View All Products</button> -->
+<!-- 							</a> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
 				</div>
 				
 		

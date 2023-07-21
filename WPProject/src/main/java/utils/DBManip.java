@@ -39,13 +39,17 @@ public class DBManip {
 		String sqlStmt = "Insert into EmployeeTask (`fName`, `sName`, `email`, `pwd`, `phNO`, `address`, `zip`, `wpCheck`)"
 				+ "values (?,?,?,?,?,?,?,?)";
 		
+		String authSqlStmt = "INSERT INTO `emp_auth` (`eId`,`uname`, `pwd`) VALUES (?, ?, ?)";
+		
 		/*
 		 * INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('30', 'edwi', '1234');
 INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('31', 'edu', '3456');
 
 		 */
+		
 		PreparedStatement preparedStatement;
 		try {
+			conn.setAutoCommit(false);
 			preparedStatement = conn.prepareStatement(sqlStmt,Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1,employee.getfName());
 			preparedStatement.setString(2,employee.getsName());
@@ -60,6 +64,13 @@ INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('31', 'edu', '345
 	        ResultSet tableKeys = preparedStatement.getGeneratedKeys();
 	        tableKeys.next();
 	        employee.seteId(tableKeys.getInt(1));
+	        preparedStatement = conn.prepareStatement(authSqlStmt);
+	        preparedStatement.setInt(1, employee.geteId());
+	        preparedStatement.setString(2, employee.getEmail());
+	        preparedStatement.setString(3, employee.getPwd());
+	        preparedStatement.executeUpdate();
+	        conn.commit();
+	        
 		}
 	catch (SQLException e) {
 			// TODO Auto-generated catch block
