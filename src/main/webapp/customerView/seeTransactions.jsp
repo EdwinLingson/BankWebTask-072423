@@ -88,21 +88,16 @@ Transactions for account <%=acct_number %></div>
 			</tr>
 			<%
 			}
+	}
 	%>
 		</table>
-	
+	<a href="customerLoginResut.jsp	">
+		<button class = "btn btn-primary">
+			Go Back to Dashboard
+		</button>
+	</a>
 	</div>
-<%
-	}
-	else {
 
-%> 
-
-<div class="card-header py-3 h4">Login Failed </div>
-<%
-	}
-%>
- </div>
  	
 </body>
 </html>
