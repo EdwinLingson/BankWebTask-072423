@@ -128,32 +128,33 @@ INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('31', 'edu', '345
 	}
 	
 	
-//	public List<Product> getProduct() {
-//		List<Product> listOfProducts  = new ArrayList();
-//		String sqlStmt= "Select * from product_jsp";
-//		try {
-//			PreparedStatement preparedStatement = conn.prepareStatement(sqlStmt);
-//			ResultSet rs;
-//		
-//			rs = preparedStatement.executeQuery();
-//		
-//			while(rs.next()) {
-//				int cId = rs.getInt(1);
-//				String pId = rs.getString(2); 
-//				String pName= rs.getString(3); 
-//				String pPrice= rs.getString(4);
-//				
-//				Product product = new Product(cId,pId,pName,pPrice);
-//				
-//				listOfProducts.add(product);
-//				
-//			}
-//			} catch (SQLException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		return listOfProducts;
-//	}
+	public List<BankAccount> getAccounts(int userId) {
+		List<BankAccount> listOfAccounts  = new ArrayList();
+		String sqlStmt= "Select * from bankaccts where userId= ?";
+		try {
+			PreparedStatement preparedStatement = conn.prepareStatement(sqlStmt);
+			preparedStatement.setInt(1, userId);
+			ResultSet rs;
+		
+			rs = preparedStatement.executeQuery();
+		
+			while(rs.next()) {
+				int cId = rs.getInt(1);
+				String acct_nmbr = rs.getString(2); 
+				double balance= rs.getDouble(3); 
+				String type= rs.getString(5).equals("S")?"Savings":"Checking";
+				
+				BankAccount bankAccount = new BankAccount(acct_nmbr,type,balance);
+				
+				listOfAccounts.add(bankAccount);
+				
+			}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		return listOfAccounts;
+	}
 	
 //	public static  Candidate getCandidate(Connection con,int cId) throws SQLException{
 //	

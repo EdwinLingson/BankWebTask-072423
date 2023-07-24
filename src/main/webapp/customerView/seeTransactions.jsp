@@ -11,32 +11,14 @@
 	String url = context.getInitParameter("url");
 	DbDetails dbDetails = new DbDetails(driver, url, uname, password);
 	
-	DBManipUser dbManip = new DBManipUser(dbDetails);
-	boolean isLoggin =false;
-	int userID =0;
-	BankUser bankUser = (BankUser)session.getAttribute("user");
-	if(bankUser==null)
-	{String u_uname = request.getParameter("uname");
-	String pwd = request.getParameter("pwd");
+	AccountManip dbManip = new AccountManip(dbDetails);
 	
-	userID = dbManip.authenticateUser(u_uname, pwd);
 	
-	 isLoggin = userID!=0? true: false;
+	String acct_number = request.getParameter("id");
+		
 	
-	if(isLoggin){
-		bankUser = dbManip.getCustomerDetails(userID);
-		bankUser.setU_uname(u_uname);
-		if(bankUser!=null)
-		session.setAttribute("user",bankUser);
-	}
-	}
-	else {
-		isLoggin = true;
-		userID = bankUser.getUserId();
-	}
+	List<Transaction> listOfTransactions = dbManip.getTransactions(acct_number);
 	
-	List<BankAccount> listOfAccounts = dbManip.getAccounts(userID);
-	session.setAttribute("listOfAccounts", listOfAccounts);
 
 %>
 <!DOCTYPE html>
@@ -72,12 +54,11 @@
 
 <div class="card text-dark bg-secondary text-center ps-5 mx-auto mt-5" style="width:50%">
 <%
-	if(isLoggin) {
+	if(true) {
 %>
 <div class="card-header py-3 h4">
-Hi 
-	<%= bankUser.getFname() + " " + bankUser.getSname()%>
-You have Following Accounts </div>
+
+Transactions for account <%=acct_number %></div>
 	<div class="card-body">
 	<table class="table table-secondary">
 			<tr>
@@ -90,34 +71,26 @@ You have Following Accounts </div>
 				<th>
 				Type
 				</th>
-				<th>
-				Actions
-				</th>
+				
 			</tr>
-	<% for(BankAccount acct:listOfAccounts) { %>
+	<% for(Transaction acct:listOfTransactions) { %>
 			<tr>
 				<td>
-				<%= acct.getAcctNumber() %>
+				<%= acct.gettId() %>
 				</td>
 				<td>
-				<%= acct.getBalance() %>
+				<%= acct.getAmt() %>
 				</td>
 				<td>
-				<%= acct.getType() %>
+				<%= acct.getAction().equals("with")?"Withdrawal":"Deposit" %>
 				</td>
-				<td>
-				<a href = <%= "seeTransactions.jsp?id="+acct.getAcctNumber() %>>
-				See transactions
-				</a>
-				</td>
+			
 			</tr>
 			<%
 			}
 	%>
 		</table>
-		<p>Do you want to create an another account. If yes click 
-			<a href="createAccount.jsp" >here</a>
-		</p>
+	
 	</div>
 <%
 	}
@@ -130,36 +103,6 @@ You have Following Accounts </div>
 	}
 %>
  </div>
-<%
-	if(isLoggin) {
-%>
-<div class="card text-dark bg-primary text-center ps-5 mx-auto mt-5" style="width:50%">
-<div class="card-header h3">Deposit/ Withdraw from accounts</div>
-<div class="card-body">
-
-	<div class ="row">
-		<div class = "col">
-			<div class="text-start">
-            <a href ="accountAction.jsp?act=with">
-          <button type="button" class="btn btn-warning me-2">Withdraw</button>
-          </a>
-        </div>
-		</div>
-		<div class = "col">
-			<div class="text-end">
-            <a href ="accountAction.jsp?act=dep">
-          <button type="button" class="btn btn-warning me-2">Deposit</button>
-          </a>
-        </div>
-		</div>
-
-	</div>
-
-</div>
-</div>
-<%
-}
-%>
  	
 </body>
 </html>
