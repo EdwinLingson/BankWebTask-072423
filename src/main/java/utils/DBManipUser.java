@@ -9,30 +9,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DBManip {
-	static Connection conn = null;
+public class DBManipUser {
+	Connection conn = null;
 	
 	
-	public DBManip(DbDetails dbDetails) {
+	public DBManipUser(DbDetails dbDetails) {
 		super();
-		this.conn = getMyConnection(dbDetails);
+		this.conn = DBConfig.getMyConnection(dbDetails);
 	}
 
 
-	public static Connection getMyConnection(DbDetails dbDetails) {
-        try {
-            Class.forName(dbDetails.getDriver());
-            Connection connection = DriverManager.getConnection(dbDetails.getUrl(), dbDetails.getUname(), dbDetails.getPassword());
-            if (connection == null) {
-                System.out.println("Connection Failed");
-            }
-            return connection;
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {	
-            throw new RuntimeException(e);
-        }
-    }
+
 
 
 	public int insertCustomerToDB(BankUser bankUser)  {
@@ -86,9 +73,9 @@ INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('31', 'edu', '345
         return bankUser.getUserId();
 	}
 	
-	public boolean authenticateUser(String uname, String pwd) {
+	public int authenticateUser(String uname, String pwd) {
 		
-		String sqlStmt= "Select * from banktaskauth where uname =? and pwd =? and moru='U'";
+		String sqlStmt= "Select * from banktaskauth where username =? and password =? and moru='U'";
 		
 		try {
 			PreparedStatement preparedStatement = conn.prepareStatement(sqlStmt);
@@ -97,47 +84,49 @@ INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('31', 'edu', '345
 			ResultSet rs = preparedStatement.executeQuery();
 			System.out.println(preparedStatement.toString());
 			if(rs.next()) {
-				return true;			
+				return rs.getInt(1);			
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
 		
-		return false;
+		return 0;
 	}
 	
 	/**
 	 * @param uname
 	 * @return
 	 */
-//	public Employee getDetailsByUname(String uname) {
-//		String sqlStmt= "Select * from employeetask where email =?";
-//		Employee employee = new Employee();
-//		try {
-//			PreparedStatement preparedStatement = conn.prepareStatement(sqlStmt);
-//			preparedStatement.setString(1, uname);
-//			System.out.println(preparedStatement.toString());
-//			ResultSet rs = preparedStatement.executeQuery();
-//			
-//			if(rs.next()) {
-//				employee.seteId(rs.getInt(1));
-//				employee.setfName(rs.getString(2));
-//				employee.setsName(rs.getString(3));
-//				employee.setEmail(rs.getString(4));
-//				employee.setPwd(rs.getString(5));
-//				employee.setPhone(rs.getString(6));
-//				employee.setAddress(rs.getString(7));
-//				employee.setZip(rs.getString(8));
-//				employee.setWp(rs.getBoolean(9));
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		
-//		return employee;
-//	}
+	public BankUser getCustomerDetails(int uid) {
+		String sqlStmt= "Select * from bankuser2 where userId =?";
+		BankUser bankUser = new BankUser();
+		try {
+			PreparedStatement preparedStatement = conn.prepareStatement(sqlStmt);
+			preparedStatement.setInt(1, uid);
+			System.out.println(preparedStatement.toString());
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			if(rs.next()) {
+				bankUser.setUserId(rs.getInt(1));
+				bankUser.setFname(rs.getString(2));
+				bankUser.setSname(rs.getString(3));
+				bankUser.setEmail(rs.getString(4));
+				bankUser.setPhNo(rs.getString(5));
+				bankUser.setAddress(rs.getString(6));
+				bankUser.setCity(rs.getString(7));
+				bankUser.setState(rs.getString(8));
+				bankUser.setZip(rs.getString(9));
+				bankUser.setMgr(rs.getString(10));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return bankUser;
+	}
+	
 	
 //	public List<Product> getProduct() {
 //		List<Product> listOfProducts  = new ArrayList();

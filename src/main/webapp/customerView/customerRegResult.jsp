@@ -11,10 +11,10 @@
 	String url = context.getInitParameter("url");
 	DbDetails dbDetails = new DbDetails(driver, url, uname, password);
 	
-	DBManip dbManip = new DBManip(dbDetails);
+	DBManipUser dbManip = new DBManipUser(dbDetails);
 	
 	String fname = request.getParameter("fname");
-	String sname = request.getParameter("sname");
+	String sname = request.getParameter("lname");
 	String email = request.getParameter("email");
 	String phNo = request.getParameter("phNo");
 	String address = request.getParameter("address");
@@ -26,10 +26,7 @@
 	String mgr = request.getParameter("mgr");
 	
 	BankUser bankUser = new BankUser(fname,sname,email,phNo,address,city,state,zip,u_uname,pwd,mgr);
-	
-	
-			//		int newKeyId=9;
-		int newKeyId = dbManip.insertCustomerToDB(bankUser);
+	int newKeyId = dbManip.insertCustomerToDB(bankUser);
 	
 
 
@@ -53,22 +50,16 @@
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="index.html" class="nav-link px-2 text-white">Home</a></li>
+          <li><a href="../index.html" class="nav-link px-2 text-white">Home</a></li>
         </ul>
 			<div class="text-end">
-            <a href ="index.html">
+            <a href ="../index.html">
           <button type="button" class="btn btn-warning me-2">Login</button>
-          </a>
-        </div>
-            <div class="text-end">
-            <a href ="register.html">
-          <button type="button" class="btn btn-outline-light me-2">Register</button>
           </a>
         </div>
       </div>
     </div>
   </header>
-
 
 <div class="card text-dark bg-secondary text-center ps-5 mx-auto mt-5" style="width:50%">
 <%

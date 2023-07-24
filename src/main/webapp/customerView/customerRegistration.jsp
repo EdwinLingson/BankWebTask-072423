@@ -18,16 +18,11 @@
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="index.html" class="nav-link px-2 text-white">Home</a></li>
+          <li><a href="../index.html" class="nav-link px-2 text-white">Home</a></li>
         </ul>
 			<div class="text-end">
-            <a href ="index.html">
+            <a href ="../index.html">
           <button type="button" class="btn btn-warning me-2">Login</button>
-          </a>
-        </div>
-            <div class="text-end">
-            <a href ="register.html">
-          <button type="button" class="btn btn-outline-light me-2">Register</button>
           </a>
         </div>
       </div>

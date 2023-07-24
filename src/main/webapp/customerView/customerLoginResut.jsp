@@ -1,4 +1,36 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1" import="utils.*, java.util.List" %>
+<%
 
+
+	ServletContext context = request.getServletContext();
+	session = request.getSession();
+	String uname = context.getInitParameter("uname");
+	String password = context.getInitParameter("password");
+	String driver = context.getInitParameter("driverName");
+	String url = context.getInitParameter("url");
+	DbDetails dbDetails = new DbDetails(driver, url, uname, password);
+	
+	DBManipUser dbManip = new DBManipUser(dbDetails);
+	
+	BankUser bankUser = null;
+	String u_uname = request.getParameter("uname");
+	String pwd = request.getParameter("pwd");
+	
+	int userID = dbManip.authenticateUser(u_uname, pwd);
+	
+	boolean isLoggin = userID!=0? true: false;
+	if(isLoggin){
+		bankUser = dbManip.getCustomerDetails(userID);
+		bankUser.setU_uname(u_uname);
+		if(bankUser!=null)
+		session.setAttribute("user",bankUser);
+	}
+	
+	
+
+
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,45 +63,23 @@
 
 
 <div class="card text-dark bg-secondary text-center ps-5 mx-auto mt-5" style="width:50%">
-<div class="card-header py-3 h4">Please Enter your Details: </div>
-    <form class="row g-3 p-3" action="customerLoginResut.jsp" method="post">
- 
-      <div class="row mb-3">
-        <label for="fname" class="col-sm-2 col-form-label">Email</label>
-        <div class="col-sm-7">
-          <input type="text" class="form-control" id="fname" placeholder="email@xyz.com" name="uname" required>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <label for="pword" class="col-sm-2 col-form-label">Password</label>
-        <div class="col-sm-7">
-          <input type="password" class="form-control" id="pword" placeholder="Enter your Password" name="pwd" required>
-        </div>
-      </div>
-      
-      <div class="row mb-3">
-        
-        <div class="col-sm-6">
-          <div class="text-center">
-      <button type="submit" class=" col-sm-6 btn btn-primary">Sign In</button>
-      </div>
-        </div>
-        
-        <div class="col-sm-6">
-          <div class="text-center">
-      <button type="reset" class=" col-sm-6 btn btn-primary">Reset</button>
-      </div>
-        </div>
-        
-      </div>
-      <p>
-      	Have not registered? 
-			<a href ="customerRegistration.jsp">
-			Register here
-			</a>
-      </p>
-     	
-    </form>
+<%
+	if(isLoggin) {
+%>
+<div class="card-header py-3 h4">
+Hi 
+	<%= bankUser.getFname() + " " + bankUser.getSname()%>
+You have Logged In </div>
+<%
+	}
+	else {
+
+%> 
+
+<div class="card-header py-3 h4">Login Failed </div>
+<%
+	}
+%>
   </div>	
 </body>
 </html>
