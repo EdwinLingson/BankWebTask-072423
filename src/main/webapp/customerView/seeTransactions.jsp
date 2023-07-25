@@ -43,9 +43,11 @@
           <li><a href="../index.html" class="nav-link px-2 text-white">Home</a></li>
         </ul>
 			<div class="text-end">
-            <a href ="../index.html">
-          <button type="button" class="btn btn-warning me-2">Login</button>
+
+            <a href ="logout.jsp">
+          <button type="button" class="btn btn-warning me-2">Logout</button>
           </a>
+        
         </div>
       </div>
     </div>
@@ -71,6 +73,9 @@ Transactions for account <%=acct_number %></div>
 				<th>
 				Type
 				</th>
+				<th>
+				Date of Transaction
+				</th>
 				
 			</tr>
 	<% for(Transaction acct:listOfTransactions) { %>
@@ -83,6 +88,9 @@ Transactions for account <%=acct_number %></div>
 				</td>
 				<td>
 				<%= acct.getAction().equals("with")?"Withdrawal":"Deposit" %>
+				</td>
+				<td>
+				<%= acct.getdOT() %>
 				</td>
 			
 			</tr>

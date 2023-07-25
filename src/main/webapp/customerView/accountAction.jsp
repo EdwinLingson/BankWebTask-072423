@@ -44,8 +44,8 @@ String action = request.getParameter("act").equals("with")?"Withdraw":"Deposit";
           <li><a href="../index.html" class="nav-link px-2 text-white">Home</a></li>
         </ul>
 			<div class="text-end">
-            <a href ="../index.html">
-          <button type="button" class="btn btn-warning me-2">Login</button>
+            <a href ="logout.jsp">
+          <button type="button" class="btn btn-warning me-2">Logout</button>
           </a>
         </div>
       </div>

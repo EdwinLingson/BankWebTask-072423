@@ -2,10 +2,13 @@ package utils;
 
 import java.awt.Desktop.Action;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +72,7 @@ public class AccountManip {
 		
 		String sqlStmt = "SELECT balance FROM bankaccts WHERE (`Acct_number` = ?);";
 		String updateStmt = "UPDATE `bankaccts` SET `balance` = ? WHERE (`Acct_number` = ?);";
-		String doTransaction = "INSERT INTO `banktransactions` (`AcctNo`, `Action`, `newBal`) VALUES (?, ?, ?)";
+		String doTransaction = "INSERT INTO `banktransactions` (`AcctNo`, `Action`, `newBal`,`DoT`) VALUES (?, ?, ?, ?)";
 		
 		double prev_amt=0;
 		PreparedStatement preparedStatement;
@@ -102,6 +105,10 @@ public class AccountManip {
 	        preparedStatement.setString(1, accountNo);
 	        preparedStatement.setString(2, act);
 	        preparedStatement.setDouble(3, prev_amt + newAmt(amount, act));
+	        java.util.Date date = new java.util.Date();    
+	        System.out.println(date.getDate()); 
+	        preparedStatement.setDate(4, new java.sql.Date(date.getYear(),date.getMonth(),date.getDate()));
+	         
 	        System.out.println(preparedStatement.toString());
 	        preparedStatement.executeUpdate();
 	        
@@ -121,7 +128,7 @@ public class AccountManip {
 	
 	public List<Transaction> getTransactions(String acctNo) {
 		List<Transaction> listOfTransactions  = new ArrayList();
-		String sqlStmt= "Select * from banktransactions where AcctNo= ?";
+		String sqlStmt= "Select * from banktransactions where AcctNo= ? order by DoT";
 		try {
 			PreparedStatement preparedStatement = conn.prepareStatement(sqlStmt);
 			preparedStatement.setString(1, acctNo);
@@ -134,8 +141,9 @@ public class AccountManip {
 				String acct_nmbr = rs.getString(2); 
 				double amt= rs.getDouble(4); 
 				String action= rs.getString(3);
+				Date dOt =rs.getDate(5);
 				
-				Transaction bankAccount = new Transaction(tId,amt,action);
+				Transaction bankAccount = new Transaction(tId,amt,action,dOt);
 				
 				listOfTransactions.add(bankAccount);
 				
