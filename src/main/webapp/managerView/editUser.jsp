@@ -1,7 +1,8 @@
-<%@page import="utils.BankManager"%>
-<%@page import="java.util.List"%>
-<%@page import="utils.DBManipManager"%>
 <%@page import="utils.DbDetails"%>
+<%@page import="utils.DBManipUser"%>
+<%@page import="utils.AuthObject"%>
+<%@page import="utils.BankUser"%>
+<%@page import="utils.BankManager"%>
 <%
 ServletContext context = request.getServletContext();
 session = request.getSession();
@@ -9,11 +10,14 @@ String uname = context.getInitParameter("uname");
 String password = context.getInitParameter("password");
 String driver = context.getInitParameter("driverName");
 String url = context.getInitParameter("url");
-DbDetails dbDetails = new DbDetails(driver, url, uname, password);
-boolean isLoggin =false;
-DBManipManager dbManip = new DBManipManager(dbDetails);
 
-List<BankManager> bankManagers =dbManip.getManagers();
+DbDetails dbDetails = new DbDetails(driver, url, uname, password);
+
+DBManipUser dbManip = new DBManipUser(dbDetails);
+
+BankUser bu = (BankUser)session.getAttribute("user");
+AuthObject auth = dbManip.getAuthValues(bu.getUserId());
+
 
 %>
 <!DOCTYPE html>
@@ -35,7 +39,7 @@ List<BankManager> bankManagers =dbManip.getManagers();
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="../index.html" class="nav-link px-2 text-white">Home</a></li>
+          <li><a href="managerLoginRes.jsp class="nav-link px-2 text-white">Home</a></li>
         </ul>
 			<div class="text-end">
             <a href ="../index.html">
@@ -49,35 +53,35 @@ List<BankManager> bankManagers =dbManip.getManagers();
 
 <div class="card text-dark bg-secondary text-center ps-5 mx-auto mt-5" style="width:50%">
 <div class="card-header py-3 h4">Please Enter your Details: </div>
-    <form class="row g-3 p-3" action="customerRegResult.jsp" method="post">
+    <form class="row g-3 p-3" action="editUserRes.jsp" method="post">
        <div class="row mb-3 pt-3">
         <label for="fname" class="col-sm-2 col-form-label">First Name</label>
         <div class="col-sm-7">
-          <input type="text" class="form-control" id="fname" placeholder="Enter your First Name" name="fname" required>
+          <input type="text" class="form-control" id="fname" placeholder="Enter your First Name" name="fname" value=<%=bu.getFname() %> required>
         </div>
       </div>
       <div class="row mb-3">
         <label for="sname" class="col-sm-2 col-form-label">Last Name</label>
         <div class="col-sm-7">
-          <input type="text" class="form-control" id="sname" placeholder="Enter your Last Name" name="lname" required>
+          <input type="text" class="form-control" id="sname" placeholder="Enter your Last Name" name="lname" value=<%=bu.getSname() %> required>
         </div>
       </div>
       <div class="row mb-3">
         <label for="fname" class="col-sm-2 col-form-label">Email</label>
         <div class="col-sm-7">
-          <input type="email" class="form-control" id="fname" placeholder="email@xyz.com" name="email" required>
+          <input type="email" class="form-control" id="fname" placeholder="email@xyz.com" name="email" value=<%=bu.getEmail() %> required>
         </div>
       </div>
       <div class="row mb-3">
         <label for="mobile" class="col-sm-2 col-form-label">Mobile</label>
         <div class="col-sm-7">
-          <input type="number" class="form-control" id="mobile" placeholder="Enter your Phone Number" name="phNo" required>
+          <input type="number" class="form-control" id="mobile" placeholder="Enter your Phone Number" name="phNo" value=<%=bu.getPhNo() %> required>
         </div>
       </div>
       <div class="row mb-3">
         <label for="address" class="col-sm-2 col-form-label">Address 1</label>
         <div class="col-sm-7">
-          <input type="text" class="form-control" id="address" placeholder="Enter your Address" name="address" required>
+          <input type="text" class="form-control" id="address" placeholder="Enter your Address" name="address" value=<%=bu.getAddress() %> required>
         </div>
       </div>
       
@@ -85,56 +89,35 @@ List<BankManager> bankManagers =dbManip.getManagers();
         
         <label for="address" class="col-sm-2 col-form-label">Address 2</label>
         <div class="col-sm-3">
-          <input type="text" class="form-control" id="address" placeholder="City" name="city" required>
+          <input type="text" class="form-control" id="address" placeholder="City" name="city"  value=<%=bu.getCity() %> required>
         </div>
         
        
         <div class="col-sm-2">
-          <input type="text" class="form-control" id="address" placeholder="State" name="state" required>
+          <input type="text" class="form-control" id="address" placeholder="State" name="state" value=<%=bu.getState() %> required>
         </div>
         
         <div class="col-sm-2">
-          <input type="number" class="form-control" id="address" placeholder="ZIP" name="zip" required>
+          <input type="number" class="form-control" id="address" placeholder="ZIP" name="zip" value=<%=bu.getZip() %> required>
         </div>
       </div>
     
       <div class="row mb-3">
         <label for="uname" class="col-sm-2 col-form-label">User Name</label>
         <div class="col-sm-7">
-          <input type="text" class="form-control" id="uname" placeholder="Enter your Username" name="uname" required>
+          <input type="text" class="form-control" id="uname" placeholder="Enter your Username" name="uname" value=<%=auth.getUname() %> required>
         </div>
       </div>
       <div class="row mb-3">
         <label for="pword" class="col-sm-2 col-form-label">Password</label>
         <div class="col-sm-7">
-          <input type="password" class="form-control" id="pword" placeholder="Enter your Password" name="pwd" required>
+          <input type="password" class="form-control" id="pword" placeholder="Enter your Password" name="pwd" value=<%=auth.getPwd() %> required>
         </div>
       </div>
-      <div class="row mb-3">
-        <label for="pg" class="col-sm-2 col-form-label">Manager</label>
-				<div class="col-sm-7">
-					<select class="form-select col-sm-7" aria-label="Default select example" id="pg" name="mgr" required>
-						
-						<option selected>Select the Manager</option>
-						<% for(BankManager bm:bankManagers) { %>
-						<option value=<%=bm.getUserId() %>><%= bm.getFname() %></option>
-						<%} %>
-					</select>
-				</div>
-			</div>
-      <fieldset class="row mb-3">
-        <legend class="col-form-label col-sm-2 pt-0">Agreement</legend>
-        <div class="col-sm-5 offset-sm-2">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="gridCheck1" name="agreement" required>
-            <label class="form-check-label" for="gridCheck1">
-               Do you agree to terms and conditions
-            </label>
-          </div>
-        </div>
-      </fieldset>
+      <input type="hidden" name="mgrId" value = <%= bu.getMgr() %>>
+      <input type="hidden" name="uId" value = <%= bu.getUserId() %>>
      	<div class="text-center">
-      <button type="submit" class=" col-sm-6 btn btn-primary">Register</button>
+      <button type="submit" class=" col-sm-6 btn btn-primary">Edit the User</button>
       </div>
     </form>
   </div>	

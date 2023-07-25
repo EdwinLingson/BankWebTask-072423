@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBManipManager {
 	Connection conn = null;
@@ -69,7 +71,7 @@ INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('31', 'edu', '345
 	
 	public int authenticateUser(String uname, String pwd) {
 		
-		String sqlStmt= "Select * from banktaskauth where username =? and password =? and moru='M'";
+		String sqlStmt= "Select * from banktaskauth where username =? and password =? and moru='M' and active=1";
 		
 		try {
 			PreparedStatement preparedStatement = conn.prepareStatement(sqlStmt);
@@ -119,5 +121,70 @@ INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('31', 'edu', '345
 		
 		
 		return bankManager;
+	}
+	
+	public List<BankManager> getManagers() {
+		String sqlStmt= "Select * from bankmanager";
+		List<BankManager> bankManagers = new ArrayList<BankManager>();
+		try {
+			PreparedStatement preparedStatement = conn.prepareStatement(sqlStmt);
+			System.out.println(preparedStatement.toString());
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			while(rs.next()) {
+				BankManager bankManager = new BankManager();
+				bankManager.setUserId(rs.getInt(1));
+				bankManager.setFname(rs.getString(2));
+				bankManager.setSname(rs.getString(3));
+				bankManager.setEmail(rs.getString(4));
+				bankManager.setPhNo(rs.getString(5));
+				bankManager.setAddress(rs.getString(6));
+				bankManager.setCity(rs.getString(7));
+				bankManager.setState(rs.getString(8));
+				bankManager.setZip(rs.getString(9));
+				bankManager.setDoj(rs.getString(10));
+				bankManagers.add(bankManager);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return bankManagers;
+	}
+	
+	public List<BankUser> getListofUsers() {
+		String sqlStmt= "Select * from bankuser2";
+		
+		List<BankUser> listofUsers = new ArrayList<BankUser>();
+				
+		try {
+			PreparedStatement preparedStatement = conn.prepareStatement(sqlStmt);
+			System.out.println(preparedStatement.toString());
+			ResultSet rs = preparedStatement.executeQuery();
+			
+			while(rs.next()) {
+				BankUser bankUser =  new BankUser();
+				bankUser.setUserId(rs.getInt(1));
+				
+				bankUser.setFname(rs.getString(2));
+				bankUser.setSname(rs.getString(3));
+				bankUser.setEmail(rs.getString(4));
+				bankUser.setPhNo(rs.getString(5));
+				bankUser.setAddress(rs.getString(6));
+				bankUser.setCity(rs.getString(7));
+				bankUser.setState(rs.getString(8));
+				bankUser.setZip(rs.getString(9));
+				bankUser.setMgr(rs.getString(10));
+				bankUser.setActive(rs.getInt(11));
+				
+				listofUsers.add(bankUser);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return listofUsers;
 	}
 }

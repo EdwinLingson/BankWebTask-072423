@@ -4,37 +4,19 @@
 
 
 	ServletContext context = request.getServletContext();
-	session = request.getSession();
+	
 	String uname = context.getInitParameter("uname");
 	String password = context.getInitParameter("password");
 	String driver = context.getInitParameter("driverName");
 	String url = context.getInitParameter("url");
 	DbDetails dbDetails = new DbDetails(driver, url, uname, password);
-	boolean isLoggin =false;
-	DBManipManager dbManip = new DBManipManager(dbDetails);
 	
-	BankManager bankManager = (BankManager) session.getAttribute("manager");
-	if(bankManager==null)
-	{
-		String u_uname = request.getParameter("uname");
-		String pwd = request.getParameter("pwd");
+	DBManipUser dbManip = new DBManipUser(dbDetails);
 	
-		int userID = dbManip.authenticateUser(u_uname, pwd);
 	
-		isLoggin  = userID!=0? true: false;
-		if(isLoggin){
-			bankManager = dbManip.getManagerDetails(userID);
-			bankManager.setU_uname(u_uname);
-			if(bankManager!=null)
-			session.setAttribute("manager",bankManager);
-		}
-	}
-	else{
-		isLoggin =true;
-	}
-	List<BankUser> listofUsers = dbManip.getListofUsers();
-	session.setAttribute("listofUsers",listofUsers);
 	
+	BankUser bankUser = (BankUser)session.getAttribute("user");
+	int newKeyId = dbManip.deActivateUser(bankUser,1);
 
 
 %>
@@ -57,90 +39,93 @@
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="managerLoginRes.jsp" class="nav-link px-2 text-white">Home</a></li>
+          <li><a href="managerLoginRes.jsp class="nav-link px-2 text-white">Home</a></li>
         </ul>
 			<div class="text-end">
-			<%
-	if(isLoggin) {
-%>
-            <a href ="logout.jsp">
-          <button type="button" class="btn btn-warning me-2">Logout</button>
-          </a>
-          <%} 
-		else { %>
-          <a href ="../index.html">
+            <a href ="../index.html">
           <button type="button" class="btn btn-warning me-2">Login</button>
           </a>
-          <%} %>
         </div>
       </div>
     </div>
   </header>
 
-
 <div class="card text-dark bg-secondary text-center ps-5 mx-auto mt-5" style="width:50%">
 <%
-	if(isLoggin) {
+	if(bankUser.getUserId()!=0) {
 %>
-<div class="card-header py-3 h4">
-Hi 
-	<%= (bankManager.getFname() + " " + bankManager.getSname()) %>
-You have Logged In </div>
-<div class="card-body">
-	<table class="table table-secondary">
-			<tr>
-				<th>
-				UserId
-				</th>
-				<th>
-				email
-				</th>
-				<th>
-				phone
-				</th>
-				<th>
-				Action
-				</th>
-				<th>
-				Active
-				</th>
-			</tr>
-	<% for(BankUser user:listofUsers) { %>
-			<tr>
-				<td>
-				<%= user.getUserId() %>
-				</td>
-				<td>
-				<%= user.getEmail() %>
-				</td>
-				<td>
-				<%= user.getPhNo() %>
-				</td>
-				<td>
-				<a href = <%= "viewAccounts.jsp?id="+user.getUserId() %>>
-				Show details
-				</a>
-				</td>
-				
-				<td>
-				<%= user.getActive()==1?"Active":"Inactive" %>
-				</td>
-			</tr>
-			<%
-			}
-	%>
-		</table>
-		<p>Do you want to create an another User. If yes click 
-			<a href="createUser.jsp" >here</a>
-		</p>
+<div class="card-header py-3 h4"><%=bankUser.getFname() %> is Edited!!! </div>
+<div class="card-body row g-3 p-3">
+       <div class="row">
+		<div class="col text-end">
+			First Name		
+		</div>
+		<div class="col  text-start">
+			<%= bankUser.getFname() %>		
+		</div>
 	</div>
+	<div class="row">
+		<div class="col text-end">
+			Last Name		
+		</div>
+		<div class="col  text-start">
+			<%= bankUser.getSname() %>		
+		</div>
+	</div>
+	<div class="row">
+		<div class="col text-end">
+			Email		
+		</div>
+		<div class="col  text-start">
+			<%= bankUser.getEmail() %>		
+		</div>
+	</div>
+	<div class="row">
+		<div class="col text-end">
+			Phone		
+		</div>
+		<div class="col  text-start">
+			<%= bankUser.getPhNo() %>		
+		</div>
+	</div>
+	<div class="row">
+		<div class="col text-end">
+			Address		
+		</div>
+		<div class="col  text-start">
+			<%= bankUser.getAddress() +", " +bankUser.getCity()+ " ," +bankUser.getState() %>		
+		</div>
+	</div>
+	<div class="row">
+		<div class="col text-end">
+			Zip
+		</div>
+		<div class="col  text-start">
+			<%= bankUser.getZip() %>		
+		</div>
+	</div>
+	<div class="row">
+		<div class="col text-end">
+			Manager ID
+		</div>
+		<div class="col text-start">
+			<%= bankUser.getMgr() %>
+		</div>
+	</div>
+ 
+     	<div class="text-center">
+     	<a href="managerLoginRes.jsp">
+      <button type="submit" class=" col-sm-6 btn btn-primary" >Go back to Dashboard</button>
+      </a>
+      </div>
+    </div>
 <%
 	}
 	else {
 
 %> 
 
-<div class="card-header py-3 h4">Login Failed </div>
+<div class="card-header py-3 h4">Registration Failed!!! </div>
 <%
 	}
 %>

@@ -1,12 +1,11 @@
-<%@page import="java.util.Set"%>
-<%@page import="java.util.Iterator"%>
-<%@page import="java.util.Map"%>
-<%@page import="java.util.HashMap"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" import="utils.*, java.util.List" %>
+
 <%
-
-
+	session = request.getSession();
+	
+	BankUser bankUser = (BankUser)session.getAttribute("user");
+	
 	ServletContext context = request.getServletContext();
 	session = request.getSession();
 	String uname = context.getInitParameter("uname");
@@ -17,25 +16,10 @@
 	
 	AccountManip dbManip = new AccountManip(dbDetails);
 	
+	String acctype = request.getParameter("acctype");
+	String deposit = request.getParameter("deposit");
 	
-	String acct_number = request.getParameter("id");
-		
-	
-	List<Transaction> listOfTransactions = dbManip.getTransactions(acct_number);
-	
-	Map<Integer,List<Transaction>> yearList = ListUtils.getbyYear(listOfTransactions);
-	Set<Integer> years = yearList.keySet();
-	Iterator iterator = years.iterator();
-	while(iterator.hasNext()){
-		Integer year = (Integer)iterator.next();
-		{
-			System.out.println(year);
-		for(Transaction tran: yearList.get(year)){
-			System.out.println(tran.getAmt());
-		}
-		}
-	}
-	
+	String acct_number = dbManip.createAccount(bankUser, acctype, deposit);
 	
 
 %>
@@ -58,14 +42,12 @@
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="customerLoginResut.jsp" class="nav-link px-2 text-white">Home</a></li>
+          <li><a href="managerLoginRes.jsp" class="nav-link px-2 text-white">Home</a></li>
         </ul>
 			<div class="text-end">
-
-            <a href ="logout.jsp">
-          <button type="button" class="btn btn-warning me-2">Logout</button>
+            <a href ="../index.html">
+          <button type="button" class="btn btn-warning me-2">Login</button>
           </a>
-        
         </div>
       </div>
     </div>
@@ -73,74 +55,34 @@
 
 
 <div class="card text-dark bg-secondary text-center ps-5 mx-auto mt-5" style="width:50%">
+<div class="card-header py-3 h4">Hi 
+<%= bankUser.getFname()
+%>  
 <%
-	if(true) {
+	if(acct_number!=null) {
 %>
-<div class="card-header py-3 h4">
+<p class="h5">
+Account Successfully Created!!!
+</p>
+<p>
+Account number is : 
+<%= acct_number %>
+</p>
 
-Transactions for account <%=acct_number %></div>
-	<div class="card-body">
-	<table class="table table-secondary">
-			<tr>
-				<th>
-				Account Number
-				</th>
-				<th>
-				Balance
-				</th>
-				<th>
-				Type
-				</th>
-				<th>
-				Date of Transaction
-				</th>
-				
-			</tr>
-	<% for(Transaction acct:listOfTransactions) { %>
-			<tr>
-				<td>
-				<%= acct.gettId() %>
-				</td>
-				<td>
-				<%= acct.getAmt() %>
-				</td>
-				<td>
-				<%= acct.getAction().equals("with")?"Withdrawal":"Deposit" %>
-				</td>
-				<td>
-				<%= acct.getdOT() %>
-				</td>
-			
-			</tr>
-			<%
-			}
-	}
-	%>
-		</table>
-		<div class="row my-3">
-			<a href=<%="transactionByyear.jsp?id="+acct_number %> class="col">
-		<button class = "btn btn-primary">
-			By Year
-		</button>
-	</a>
-	<a href=<%="transactionByMonth.jsp?id="+acct_number %>  class="col">
-		<button class = "btn btn-primary">
-			By Month
-		</button>
-	</a>
-	<a href=<%="transactionByDay.jsp?id="+acct_number %>  class="col">
-		<button class = "btn btn-primary">
-			By Day
-		</button>
-	</a>
-		</div>
-	<a href="customerLoginResut.jsp">
+<%
+} else {
+%>
+<p class="h5">
+Account Creation Failed!!!
+</p>
+<%} %>
+	<a href="managerLoginRes.jsp	">
 		<button class = "btn btn-primary">
 			Go Back to Dashboard
 		</button>
 	</a>
-	</div>
 </div>
- 	
+    
+  </div>	
 </body>
 </html>

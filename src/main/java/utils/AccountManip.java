@@ -55,6 +55,7 @@ public class AccountManip {
 	        preparedStatement.setInt(2, newKey);
 	        System.out.println(preparedStatement.toString());
 	        preparedStatement.executeUpdate();
+	        doAction("dep", acct_number, deposit);
 	        conn.commit();
 	        
 		}

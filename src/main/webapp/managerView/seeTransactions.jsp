@@ -58,7 +58,7 @@
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="customerLoginResut.jsp" class="nav-link px-2 text-white">Home</a></li>
+          <li><a href="managerLoginRes.jsp" class="nav-link px-2 text-white">Home</a></li>
         </ul>
 			<div class="text-end">
 
@@ -134,13 +134,13 @@ Transactions for account <%=acct_number %></div>
 		</button>
 	</a>
 		</div>
-	<a href="customerLoginResut.jsp">
+	<a href="managerLoginRes.jsp	">
 		<button class = "btn btn-primary">
 			Go Back to Dashboard
 		</button>
 	</a>
 	</div>
-</div>
+
  	
 </body>
 </html>

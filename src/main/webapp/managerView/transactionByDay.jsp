@@ -1,3 +1,4 @@
+
 <%@page import="java.util.Set"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.Map"%>
@@ -23,18 +24,10 @@
 	
 	List<Transaction> listOfTransactions = dbManip.getTransactions(acct_number);
 	
-	Map<Integer,List<Transaction>> yearList = ListUtils.getbyYear(listOfTransactions);
-	Set<Integer> years = yearList.keySet();
-	Iterator iterator = years.iterator();
-	while(iterator.hasNext()){
-		Integer year = (Integer)iterator.next();
-		{
-			System.out.println(year);
-		for(Transaction tran: yearList.get(year)){
-			System.out.println(tran.getAmt());
-		}
-		}
-	}
+	Map<String,List<Transaction>> yearList = ListUtils.getbyDay (listOfTransactions);
+	Set<String> years = yearList.keySet();
+	Iterator<String> iterator = years.iterator();
+	
 	
 	
 
@@ -58,7 +51,7 @@
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="customerLoginResut.jsp" class="nav-link px-2 text-white">Home</a></li>
+          <li><a href="managerLoginRes.jsp" class="nav-link px-2 text-white">Home</a></li>
         </ul>
 			<div class="text-end">
 
@@ -78,9 +71,17 @@
 %>
 <div class="card-header py-3 h4">
 
-Transactions for account <%=acct_number %></div>
-	<div class="card-body">
+Transactions for account <%=acct_number %> by years </div>
+	
+		<div class="card-body">
+	<% while(iterator.hasNext())
+		{
+		String year = (String)iterator.next();
+		
+		%>
+		
 	<table class="table table-secondary">
+	<tr><th class="text-center h4" colspan="4"><%=year %></th></tr>
 			<tr>
 				<th>
 				Account Number
@@ -96,7 +97,7 @@ Transactions for account <%=acct_number %></div>
 				</th>
 				
 			</tr>
-	<% for(Transaction acct:listOfTransactions) { %>
+	<% for(Transaction acct: yearList.get(year)) { %>
 			<tr>
 				<td>
 				<%= acct.gettId() %>
@@ -115,28 +116,12 @@ Transactions for account <%=acct_number %></div>
 			<%
 			}
 	}
+	}
 	%>
 		</table>
-		<div class="row my-3">
-			<a href=<%="transactionByyear.jsp?id="+acct_number %> class="col">
+	<a href=<%="seeTransactions.jsp?id="+acct_number %>>
 		<button class = "btn btn-primary">
-			By Year
-		</button>
-	</a>
-	<a href=<%="transactionByMonth.jsp?id="+acct_number %>  class="col">
-		<button class = "btn btn-primary">
-			By Month
-		</button>
-	</a>
-	<a href=<%="transactionByDay.jsp?id="+acct_number %>  class="col">
-		<button class = "btn btn-primary">
-			By Day
-		</button>
-	</a>
-		</div>
-	<a href="customerLoginResut.jsp">
-		<button class = "btn btn-primary">
-			Go Back to Dashboard
+			Go Back to Transactions
 		</button>
 	</a>
 	</div>

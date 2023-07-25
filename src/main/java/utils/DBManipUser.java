@@ -23,10 +23,10 @@ public class DBManipUser {
 
 
 	public int insertCustomerToDB(BankUser bankUser)  {
-		String sqlStmt = "Insert into bankuser2 (`fname`, `sname`, `email`, `phone`, `address`, `city`, `state`, `zip`, `mgr`)"
-				+ "values (?,?,?,?,?,?,?,?,?)";
+		String sqlStmt = "Insert into bankuser2 (`fname`, `sname`, `email`, `phone`, `address`, `city`, `state`, `zip`, `mgr`,`active`)"
+				+ "values (?,?,?,?,?,?,?,?,?,1)";
 		
-		String authSqlStmt = "INSERT INTO `banktaskauth` (`userId`, `username`, `password`, `moru`) values (?, ?, ?, ?)";
+		String authSqlStmt = "INSERT INTO `banktaskauth` (`userId`, `username`, `password`, `moru`,`active`) values (?, ?, ?, ?, 1)";
 		
 		/*
 		 * INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('30', 'edwi', '1234');
@@ -73,9 +73,99 @@ INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('31', 'edu', '345
         return bankUser.getUserId();
 	}
 	
+	
+	public int editUser(BankUser bankUser)  {
+		String sqlStmt = "UPDATE `bankuser2` SET `fname` = ?, `sname` = ?, `email` = ?,"
+				+ " `phone` = ?, `address` = ?, `city` = ?, `state` = ?, `zip` = ?, `mgr` = ? "
+				+ "WHERE (`userId` = ?)";
+		
+		String authSqlStmt = "UPDATE `testdb`.`banktaskauth` SET `username` = ?, `password` = ? WHERE (`userId` = ?)";
+		
+		/*
+		 * INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('30', 'edwi', '1234');
+INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('31', 'edu', '3456');
+
+		 */
+		
+		PreparedStatement preparedStatement;
+		try {
+			conn.setAutoCommit(false);
+			preparedStatement = conn.prepareStatement(sqlStmt,Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setString(1,bankUser.getFname());
+			preparedStatement.setString(2,bankUser.getSname());
+			preparedStatement.setString(3,bankUser.getEmail());
+			preparedStatement.setString(4,bankUser.getPhNo());
+			preparedStatement.setString(5,bankUser.getAddress());
+			preparedStatement.setString(6,bankUser.getCity());
+			preparedStatement.setString(7,bankUser.getState());
+			preparedStatement.setString(8,bankUser.getZip());
+			preparedStatement.setString(9,bankUser.getMgr());
+			preparedStatement.setInt(10,bankUser.getUserId());
+			System.out.println(preparedStatement.toString());
+			preparedStatement.executeUpdate();
+			
+			
+			preparedStatement = conn.prepareStatement(authSqlStmt);
+			System.out.println(preparedStatement.toString());
+			preparedStatement.setString(1, bankUser.getU_uname());
+			preparedStatement.setString(2, bankUser.getPwd());
+			preparedStatement.setInt(3, bankUser.getUserId());
+			System.out.println(preparedStatement.toString());
+			preparedStatement.executeUpdate();
+			conn.commit();
+			
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
+		
+		return bankUser.getUserId();
+	}
+	
+	public int deActivateUser(BankUser bankUser,int flag)  {
+		String sqlStmt = "UPDATE `banktaskauth` SET `active` = ? WHERE (`userId` = ?)";
+		
+		String authSqlStmt = "UPDATE `testdb`.`bankuser2` SET `active` = ? WHERE (`userId` = ?)";
+		
+		/*
+		 * INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('30', 'edwi', '1234');
+INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('31', 'edu', '3456');
+
+		 */
+		
+		PreparedStatement preparedStatement;
+		try {
+			conn.setAutoCommit(false);
+			preparedStatement = conn.prepareStatement(sqlStmt,Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setInt(1,flag);
+			preparedStatement.setInt(2,bankUser.getUserId());
+			System.out.println(preparedStatement.toString());
+			preparedStatement.executeUpdate();
+			
+			
+			preparedStatement = conn.prepareStatement(authSqlStmt);
+			System.out.println(preparedStatement.toString());
+			preparedStatement.setInt(1, flag);
+			preparedStatement.setInt(2, bankUser.getUserId());
+			System.out.println(preparedStatement.toString());
+			preparedStatement.executeUpdate();
+			conn.commit();
+			
+		}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
+		}
+		
+		return bankUser.getUserId();
+	}
+	
 	public int authenticateUser(String uname, String pwd) {
 		
-		String sqlStmt= "Select * from banktaskauth where username =? and password =? and moru='U'";
+		String sqlStmt= "Select * from banktaskauth where username =? and password =? and moru='U' and active=1";
 		
 		try {
 			PreparedStatement preparedStatement = conn.prepareStatement(sqlStmt);
@@ -92,6 +182,26 @@ INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('31', 'edu', '345
 		
 		
 		return 0;
+	}
+	
+public AuthObject getAuthValues(int uId) {
+		
+		String sqlStmt= "Select username, password from banktaskauth where userId =?";
+		
+		try {
+			PreparedStatement preparedStatement = conn.prepareStatement(sqlStmt);
+			preparedStatement.setInt(1, uId);
+			ResultSet rs = preparedStatement.executeQuery();
+			System.out.println(preparedStatement.toString());
+			if(rs.next()) {
+				return new AuthObject(rs.getString(1),rs.getString(2));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return null;
 	}
 	
 	/**
@@ -118,6 +228,7 @@ INSERT INTO `testdb`.`users` (`cid`, `uname`, `pword`) VALUES ('31', 'edu', '345
 				bankUser.setState(rs.getString(8));
 				bankUser.setZip(rs.getString(9));
 				bankUser.setMgr(rs.getString(10));
+				bankUser.setActive(rs.getInt(11));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

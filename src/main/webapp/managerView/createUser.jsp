@@ -1,19 +1,7 @@
 <%@page import="utils.BankManager"%>
-<%@page import="java.util.List"%>
-<%@page import="utils.DBManipManager"%>
-<%@page import="utils.DbDetails"%>
 <%
-ServletContext context = request.getServletContext();
-session = request.getSession();
-String uname = context.getInitParameter("uname");
-String password = context.getInitParameter("password");
-String driver = context.getInitParameter("driverName");
-String url = context.getInitParameter("url");
-DbDetails dbDetails = new DbDetails(driver, url, uname, password);
-boolean isLoggin =false;
-DBManipManager dbManip = new DBManipManager(dbDetails);
 
-List<BankManager> bankManagers =dbManip.getManagers();
+BankManager bm = (BankManager)session.getAttribute("manager");
 
 %>
 <!DOCTYPE html>
@@ -35,12 +23,13 @@ List<BankManager> bankManagers =dbManip.getManagers();
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="../index.html" class="nav-link px-2 text-white">Home</a></li>
+          <li><a href="managerLoginRes.jsp" class="nav-link px-2 text-white">Home</a></li>
         </ul>
 			<div class="text-end">
-            <a href ="../index.html">
-          <button type="button" class="btn btn-warning me-2">Login</button>
+          <a href ="logout.jsp">
+          <button type="button" class="btn btn-warning me-2">Logout</button>
           </a>
+          
         </div>
       </div>
     </div>
@@ -49,7 +38,7 @@ List<BankManager> bankManagers =dbManip.getManagers();
 
 <div class="card text-dark bg-secondary text-center ps-5 mx-auto mt-5" style="width:50%">
 <div class="card-header py-3 h4">Please Enter your Details: </div>
-    <form class="row g-3 p-3" action="customerRegResult.jsp" method="post">
+    <form class="row g-3 p-3" action="createUserRes.jsp" method="post">
        <div class="row mb-3 pt-3">
         <label for="fname" class="col-sm-2 col-form-label">First Name</label>
         <div class="col-sm-7">
@@ -110,29 +99,7 @@ List<BankManager> bankManagers =dbManip.getManagers();
           <input type="password" class="form-control" id="pword" placeholder="Enter your Password" name="pwd" required>
         </div>
       </div>
-      <div class="row mb-3">
-        <label for="pg" class="col-sm-2 col-form-label">Manager</label>
-				<div class="col-sm-7">
-					<select class="form-select col-sm-7" aria-label="Default select example" id="pg" name="mgr" required>
-						
-						<option selected>Select the Manager</option>
-						<% for(BankManager bm:bankManagers) { %>
-						<option value=<%=bm.getUserId() %>><%= bm.getFname() %></option>
-						<%} %>
-					</select>
-				</div>
-			</div>
-      <fieldset class="row mb-3">
-        <legend class="col-form-label col-sm-2 pt-0">Agreement</legend>
-        <div class="col-sm-5 offset-sm-2">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="gridCheck1" name="agreement" required>
-            <label class="form-check-label" for="gridCheck1">
-               Do you agree to terms and conditions
-            </label>
-          </div>
-        </div>
-      </fieldset>
+      <input type="hidden" name="mgrId" value = <%= bm.getUserId() %>>
      	<div class="text-center">
       <button type="submit" class=" col-sm-6 btn btn-primary">Register</button>
       </div>

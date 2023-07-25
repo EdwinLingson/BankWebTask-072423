@@ -14,6 +14,7 @@ public class BankUser {
 	private String u_uname;
 	private String pwd;
 	private String mgr;
+	private int active;
 	
 	public BankUser(int userId, String fname, String sname, String email, String phNo, String address, String city,
 			String state, String zip, String u_uname, String pwd, String mgr) {
@@ -146,6 +147,14 @@ public class BankUser {
 
 	public void setMgr(String mgr) {
 		this.mgr = mgr;
+	}
+
+	public int getActive() {
+		return active;
+	}
+
+	public void setActive(int active) {
+		this.active = active;
 	}
 	
 	

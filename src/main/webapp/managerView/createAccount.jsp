@@ -3,6 +3,7 @@
 <%
 session = request.getSession();
 
+BankManager bankManager = (BankManager)session.getAttribute("manager");
 BankUser bankUser = (BankUser)session.getAttribute("user");
 char id = request.getParameter("type").charAt(0);
 
@@ -26,7 +27,7 @@ char id = request.getParameter("type").charAt(0);
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="customerLoginResut.jsp" class="nav-link px-2 text-white">Home</a></li>
+          <li><a href="managerLoginRes.jsp class="nav-link px-2 text-white">Home</a></li>
         </ul>
 			<div class="text-end">
             <a href ="../index.html">
@@ -39,11 +40,11 @@ char id = request.getParameter("type").charAt(0);
 
 
 <div class="card text-dark bg-secondary text-center ps-5 mx-auto mt-5" style="width:50%">
-<div class="card-header py-3 h4">Hi 
+<div class="card-header py-3 h4">We are creating account for the User: 
 <%= bankUser.getFname()
 %>  
 <p class="h5">
-We want to know some details to start the account, fill the following form
+ Fill the following form
 </p>
 </div>
     <form class="row g-3 p-3" action="createAccountInDB.jsp" method="post">

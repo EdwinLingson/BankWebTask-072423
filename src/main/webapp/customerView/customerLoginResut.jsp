@@ -58,7 +58,7 @@
         </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="../index.html" class="nav-link px-2 text-white">Home</a></li>
+          <li><a href="customerLoginResut.jsp" class="nav-link px-2 text-white">Home</a></li>
         </ul>
 			<div class="text-end">
             		<%
@@ -124,9 +124,13 @@ You have Following Accounts </div>
 			}
 	%>
 		</table>
+		<% if(listOfAccounts.size()<2){
+			char f =ListUtils.getPossibleAccount(listOfAccounts);
+			%>
 		<p>Do you want to create an another account. If yes click 
-			<a href="createAccount.jsp" >here</a>
+			<a href=<%="createAccount.jsp?type="+f %> >here</a>
 		</p>
+		<% } %>
 	</div>
 <%
 	}
